@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+	border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+	padding: 15px;
+}
+th {
+	text-align: left;
+ }
+</style>
+</head>
+
+<body>
+
+<h2>My first table in HTML</h2>
+
+
+<table style="width:70%" id = "table">
+	<caption>my table</caption>
+	<tr>
+    	<th>FirstName</th>
+        <th>LastName</th>
+        <th>Age</th>
+    </tr>
+
+    <tr>
+    	<td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+
+    	<td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+    	<td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+    	<td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+</table>
+
+<form>
+	<br>Let's complete the table:<br>
+	<br>Row:    <input id = "rowInput" type = "text" value = "">
+	<br>Column: <input id = "colInput" type = "text" value = "">
+	<br>Value:  <input id = "valInput" type = "text" value = ""><br>
+    <br><input type= "reset">
+</form>
+
+<button id="addTT">Add to table</button>
+
+<script>
+
+	var x = document.getElementById("addTT")
+    x.addEventListener("click", addToTable);
+
+    var table = document.getElementById("table"); // HTML ELEMENT OBJ
+
+    function addToTable(){
+    	var row = document.getElementById("rowInput").value;
+        var col = document.getElementById("colInput").value;
+        var value = document.getElementById("valInput").value;
+
+        if (row == 0 || row >= table.rows.length) {
+        	alert("Row number error!")
+            return;
+        }
+        if (col >= table.rows[row].cells.length) {
+        	alert("Column number error!")
+            return;
+        }
+        table.rows[row].cells[col].innerHTML = value;
+    };
+
+</script>
+
+</body>
+</html>
