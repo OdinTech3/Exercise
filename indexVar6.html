@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+	border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+	padding: 15px;
+}
+th {
+	text-align: left;
+ }
+</style>
+</head>
+
+<body>
+
+<h2>My first table in HTML</h2>
+
+
+<table style="width:70%" id = "table">
+	<caption>my table</caption>
+	<tr>
+    	<th>FirstName</th>
+        <th>LastName</th>
+        <th>Age</th>
+    </tr>
+
+    <tr>
+    	<td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+
+    	<td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+    	<td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+    	<td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+</table>
+
+<form>
+	<br>Let's complete the table:<br>
+	<br>Row:    <input id = "rowInput" type = "text" value = "">
+	<br>Column: <input id = "colInput" type = "text" value = "">
+	<br>Value:  <input id = "valInput" type = "text" value = ""><br>
+    <br><input type= "reset">
+</form>
+
+<button id="addTT">Add to table</button>
+
+<form>
+	<br>Let's add data to the table:<br>
+    <br>First name:    <input id = "fName" type = "text" value = "">	<br>Last name:    <input id = "lName" type = "text" value = "">		<br>Age:    <input id = "age" type = "number" value = ""><br>
+    <br><input type= "reset">
+</form>
+<button id="addDR">Add data to table</button>
+
+<form>
+	<br>Let's expand the table:<br>
+    <br>Add <input id = "rowNum" type = "number" value = ""> rows:
+    <br>Add <input id = "colNum" type = "number" value = ""> columns:
+</form>
+<button id="addMR">Expand the table</button>
+
+<script>
+
+	var x = document.getElementById("addTT")
+    x.addEventListener("click", addToTable);
+	var y = document.getElementById("addDR")
+    y.addEventListener("click", addDataRows);
+	var z = document.getElementById("addMR")
+    z.addEventListener("click", addMultipleRows);
+
+    var table = document.getElementById("table"); // HTML ELEMENT OBJ
+
+    function addToTable(){
+    	var row = document.getElementById("rowInput").value;
+        var col = document.getElementById("colInput").value;
+        var value = document.getElementById("valInput").value;
+
+        if (row == 0 || row >= table.rows.length) {
+        	alert("Row number error!")
+            return;
+        }
+        if (col >= table.rows[row].cells.length) {
+        	alert("Column number error!")
+            return;
+        }
+        table.rows[row].cells[col].innerHTML = value;
+    };
+
+    function addDataRows(){
+        var firstName = document.getElementById("fName");
+        var lastName = document.getElementById("lName");
+        var age = document.getElementById("age");
+		var len = table.rows.length;
+
+        var row = table.insertRow(len);
+            row.insertCell(0).innerHTML = firstName.value;
+        	row.insertCell(1).innerHTML = lastName.value;
+        	row.insertCell(2).innerHTML = age.value;
+	}
+
+    function addMultipleRows(){
+		var rowLen = document.getElementById("rowNum").value;
+		var colLen = document.getElementById("colNum").value;
+
+
+        for (var r=0; r<rowLen; r++){
+        	var row = table.insertRow(-1);
+
+            for (var c=0; c<colLen; c++) {
+            	row.insertCell(c)
+            }
+        }
+
+     }
+
+</script>
+
+</body>
+</html>
+
+
+
