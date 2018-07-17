@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--//div control the all calculator component like (buttons, text field ). It also control the left, top margin of calculator. -->
+<style>
+div {
+	background-color: white;
+    width: 500px;
+    margin-left: 15%;
+    mergin-top:5%
+
+}
+table{
+	border: 2px solid white;
+    border-collapse: collapse;
+    border-radius:10px;
+    box-shadow: 0 0 2px 1px darkseagreen;
+    cursor: pointer;
+}
+th {
+	background:aquamarine;
+    padding: 10px;
+    border-radius:10px;
+    font-family:arial;
+}
+input[type="button"] {
+	border: none;
+    width: 100%;
+    padding: 10px;
+    font-size: 20px;
+    outline: none;
+    height: 40px;
+    transition: all 0.3s ease-in-out;
+    border-radius:5px;
+    cursor: pointer;
+}
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="text"] {
+    border: none;
+    width: 90%;
+    height: 50px;
+    padding: 10px;
+    font-size: 40px;
+    outline: none;
+    font-weight: normal;
+    color: black;
+}
+.numbutton {
+    background-color: whitesmoke;
+    color: black;
+    transition: all 0.3s ease-in-out;
+}
+.clear {
+    background: coral;
+    color: white;
+    transition: all 0.3s ease-in-out;
+    border-radius:5px;
+}
+.opbutton {
+	background:darkgrey;
+    color:white;
+    transition: all 0.3s ease-in-out;
+
+}
+.equal {
+	background:aquamarine;
+    color:black;
+    transition: all 0.3s ease-in-out;
+}
+.numbutton:hover {
+    background-color: black;
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+.clear:hover {
+    background-color: red;
+    color: black;
+    transition: all 0.3s ease-in-out;
+}
+.opbutton:hover {
+    background-color: grey;
+    color: black;
+    transition: all 0.3s ease-in-out;
+}
+.equal:hover {
+    background-color: turquoise;
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+</style>
+</head>
+
+<body>
+<div align="center">
+<form>
+<table style="width:40%" id = "table">
+	<caption></caption>
+	<tr>
+    	<th colspan="4" style="color:black;">Calculator</th>
+    </tr>
+
+    <tr>
+    	<td colspan="4"><input id="showvalue" type="text" placeholder="0" ></td>
+    </tr>
+    <tr>
+		<td><input class="numbutton" type="button" onclick="clickButton(this.value)" value="7"></td>
+    	<td><input class="numbutton" type="button" onclick="clickButton(this.value)" value="8"></td>
+        <td><input class="numbutton" type="button" onclick="clickButton(this.value)" value="9"></td>
+        <td><input class="opbutton" type="button" onclick="clickButton(this.value)" value="/"></td>
+    </tr>
+
+    <tr>
+    	<td><input class="numbutton" type="button" onclick="clickButton(this.value)" value="4"></td>
+    	<td><input class="numbutton" type="button" onclick="clickButton(this.value)" value="5"></td>
+        <td><input class="numbutton" type="button" onclick="clickButton(this.value)" value="6"></td>
+        <td><input class="opbutton" type="button" onclick="clickButton('*')" value="X"></td>
+    </tr>
+
+    <tr>
+    	<td><input class="numbutton" type="button" onclick="clickButton(this.value)" value="1"></td>
+        <td><input class="numbutton" type="button" onclick="clickButton(this.value)" value="2"></td>
+        <td><input class="numbutton" type="button" onclick="clickButton(this.value)" value="3"></td>
+        <td><input class="opbutton" type="button" onclick="clickButton(this.value)" value="-"></td>
+    </tr>
+    <tr>
+    	<td colspan="2"><input class="numbutton" type="button" onclick="clickButton(this.value)" value="0"></td>
+        <td><input class="numbutton" type="button" onclick="insertDecimal(this.value)" value="."></td>
+        <td rowspan="2"><input class="opbutton" type="button" style="height: 82px" onclick="clickButton(this.value)" value="+"></td>
+    </tr>
+	<tr>
+    	<td><input class="clear" type="button" onclick="clickButton(this.value)" value="C"></td>
+        <td colspan="2"><input class="equal" type="button" onclick="displayResults()" value="="></td>
+    </tr>
+</table>
+</form>
+</div>
+
+<script>
+
+// inputul accepta doar nr!!!!  trebuie sa modificam type in <td> id = "show value"
+//delete arrows in input type="number"
+//function AllowNumbersOnly(e) {
+//  var charCode = (e.which) ? e.which : e.keyCode;
+//  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+//    e.preventDefault();
+//  }
+//}
+
+//activate number buttons
+function clickButton(buttonvalue) {
+	var display = document.getElementById("showvalue");
+    if(buttonvalue == "C"){
+    	display.value = "0";
+    }
+	else {
+    	if (display.value == "0") {
+    		display.value = buttonvalue;
+    	} else {
+			display.value += buttonvalue;
+    	}
+    }
+}
+
+//insertDecimal - loop through the current number to make sure there isn't already a decimal
+function insertDecimal(dec) {
+    var display = document.getElementById("showvalue");
+    for (i = 0; i < display.value.length; i++)
+        if (display.value.charAt(i) == '.') {
+            return; //if there is do nothing
+        }
+    // If there isn't add a decimal to the end of the displayed number
+        display.value += dec;
+}
+
+
+var operators = ['*', '/', '+', '-'];
+var STACK1 = [];
+var STACK2 = [];
+
+function infixToPostfix(infixExpr, postfixExpr) {
+    var infixIndex = 0;
+    while(infixIndex < infixExpr.length) {
+        if(isNumeric(infixExpr[infixIndex])){
+            postfixExpr.push(infixExpr[infixIndex]);
+        }
+
+        if(infixExpr[infixIndex] == "("){
+            STACK1.unshift(infixExpr[infixIndex]);
+        }
+
+        if(infixExpr[infixIndex] == ")"){
+            while(STACK1.length > 0 && STACK1[0] != "("){
+                var y = STACK1.shift();
+                postfixExpr.push(y);
+            }
+            STACK1.shift()
+        }
+
+        if(isIncluded(operators, infixExpr[infixIndex])) {
+            if(STACK1.length === 0 || STACK1[0] === "("){
+                STACK1.unshift(infixExpr[infixIndex]) ;
+            }
+            else {
+                while(STACK1.length > 0 && STACK1[0] !== "(" && opPrec(infixExpr[infixIndex], STACK1[0]) <= opPrec(STACK1[0], infixExpr[infixIndex])){
+                      var a = STACK1.shift();
+                      postfixExpr.push(a);
+                }
+                STACK1.unshift(infixExpr[infixIndex]);
+            }
+
+        }
+
+        infixIndex+=1;
+    }
+
+    while (STACK1.length > 0){
+        var z = STACK1.shift();
+        postfixExpr.push(z);
+    }
+    return postfixExpr;
+}
+
+function evaluate(postfixExpr) {
+  var postfixIndex = 0;
+  while(postfixIndex < postfixExpr.length){
+    if(isNumeric(postfixExpr[postfixIndex])){
+      STACK2.unshift(postfixExpr[postfixIndex]);
+    }
+    if(isIncluded(operators, postfixExpr[postfixIndex])){
+      var A = STACK2.shift();
+      var B = STACK2.shift();
+      if(postfixExpr[postfixIndex] === "+") {
+        STACK2.unshift(parseFloat(B) + parseFloat(A));
+      } else if(postfixExpr[postfixIndex] === "-") {
+        STACK2.unshift(parseFloat(B) - parseFloat(A));
+      } else if(postfixExpr[postfixIndex] === "*") {
+        STACK2.unshift(parseFloat(B) * parseFloat(A));
+      } else if(postfixExpr[postfixIndex] === "/") {
+        STACK2.unshift(parseFloat(B) / parseFloat(A));
+      }
+    }
+    postfixIndex+=1;
+  }
+
+  return STACK2.shift();
+}
+
+function isNumeric(num) {
+    return !isNaN(num)
+}
+
+function isIncluded(array, value) {
+    return (array.indexOf(value) !== -1)
+}
+
+function opPrec(opA, opB) {
+    if(opA == '+' && opB == '-') {
+        return 0;
+    }
+
+    if(opA == '-' && opB == '+') {
+        return 0;
+    }
+
+    if(opA == '+' && opB == '/') {
+        return -1;
+    }
+
+    if(opA == '/' && opB == '+') {
+        return 1;
+    }
+
+    if(opA == '-' && opB == '/') {
+        return -1;
+    }
+
+    if(opA == '/' && opB == '-') {
+        return 1;
+    }
+
+    if(opA == '+' && opB == '*') {
+        return -1;
+    }
+
+    if(opA == '*' && opB == '+') {
+        return 1;
+    }
+
+    if(opA == '-' && opB == '*') {
+        return -1;
+    }
+
+    if(opA == '*' && opB == '-') {
+        return 1;
+    }
+
+    if(opA == '*' && opB == '/') {
+        return 0;
+    }
+
+    if(opA == '/' && opB == '*') {
+        return 0;
+    }
+
+    return -1;
+}
+
+
+function displayResults() {
+	var display = document.getElementById("showvalue").value;
+    console.log(display)
+	var infix = display.split("");
+    console.log(infix)
+	var postfix = [];
+
+	var tempNum = "";
+	var stack = "";
+
+//    if(!isNumeric(stack[stack.length-1])||stack[stack.length-1]=="."||stack.length==0||IsMultiplyOrDivide(stack[0])){
+//		result=0;
+//	}
+//	else{
+		for(var i=0; i<stack.length; i++){
+  			if(isNumeric(stack[i])||i==0){
+				tempNum=tempNum+stack[i];
+			} else {
+				infix.push(parseFloat(tempNum));
+				infix.push(stack[i]);
+				tempNum = "";
+			}
+		}
+	infix.push(parseFloat(tempNum));
+
+    var postfixInput = infixToPostfix(infix, postfix)
+//    var lastVal = postfixInput[postfixInput.length-1];
+//    if(lastVal === "+" ){
+//    	postfixInput.pop()
+//    	}
+	var result = evaluate(postfixInput);
+	document.getElementById('showvalue').value = result;
+}
+
+</script>
+</body>
+</html>
